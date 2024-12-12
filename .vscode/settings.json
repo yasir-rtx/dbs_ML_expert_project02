@@ -1,0 +1,9 @@
+{
+    "editor.fontSize": 13,
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.fontFamily": "Consolas, 'Courier New', monospace",
+    "workbench.iconTheme": "vscode-icons",
+    "python.envFile": "~/.pyenv/tf2.16",
+    "python.terminal.activateEnvironment": true
+}
