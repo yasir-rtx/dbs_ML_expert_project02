@@ -63,7 +63,7 @@ Informasi lebih lanjut dapat dilihat di [Anime Recommendations Database](https:/
 | 75%       | 7.180000     |
 | max       | 10.000000    |
 
-Tabel #. Deskripsi Statistik Rating pada Anime
+Tabel 1. Deskripsi Statistik Rating pada Anime
 
 Berdasarkan tabel di atas dapat diketahui bahwa rating terendah yang diberi oleh user adalah 1.67 dan rating tertinggi 10. Rata-rata rating adalah 6.47.
 
@@ -83,13 +83,15 @@ Fungsi tersebut menghasilkan output sebagai berikut:
 | rating    | 230   |
 | members   |   0   |
 
-Tabel # Missing Value pada Data Anime
+Tabel 2 Missing Value pada Data Anime
 
 Jumlah missing value pada data anime sangat sedikit bila dibandingkan dengan jumlah total data yang ada. Metode yang digunakan untuk mengatasi missing value pada tabel anime adalah dengan menghapus baris yang yang memiliki missing value.
 
 ###  Plotting Distribusi Jumlah Rating dari Setiap Anime
 
-Gambar 2. Distribusi Jumlah Rating pada Anime
+![jumlah_rating_setiap_anime](https://github.com/user-attachments/assets/408f441a-fa77-4b0e-b29e-aaacba3544dc)
+
+Gambar 1. Distribusi Jumlah Rating pada Anime
 
 Bayangkan sebuah anime baru mendapat rating sebanyak satu, tentu penilaian terhadap anime itu akan sangat dipengaruhi oleh satu rating tersebut. Jika rating yang diberikan tinggi tentu anime tersebut akan memiliki citra yang bagus dan sebaliknya. Anime dengan kondisi seperti ini dapat menjadi bias saat membangun model AI. Oleh karena itu diterapkan nilai ambang yang akan menyaring anime dengan jumlah rating yang rendah. Nilai ambang yang digunakan pada proyek ini adalah 50 yang akan menghapus anime dengan jumlah rating lebih kecil dari 50.
 
@@ -107,7 +109,7 @@ Bayangkan sebuah anime baru mendapat rating sebanyak satu, tentu penilaian terha
 | 75%       | 9.000000e+00  |
 | max       | 1.000000e+01  |
 
-Tabel #. Deskripsi Statistik rating pada Rating
+Tabel 3. Deskripsi Statistik rating pada Rating
 
 Berdasarkan tabel di atas dapat diketahui bahwa rating terendah yang diberi oleh user adalah -1 dimana rating -1 berarti bahwa user tidak memberi rating pada anime dan rating tertinggi 10. Rata-rata rating adalah 6.14.
 
@@ -120,12 +122,14 @@ Fungsi yang sama untuk melihat missing value pada data anime juga akan diguanakn
 | anime_id  | 0     |
 | rating    | 0     |
 
-Tabel #. Missing Value pada Data Rating
+Tabel 4. Missing Value pada Data Rating
 
 
 ### Plotting Distribusi Rating
 
-Gambar 1. Distribusi Rating
+![distribusi_rating](https://github.com/user-attachments/assets/9571acf8-e205-47f1-9c00-99da8a952091)
+
+Gambar 2. Distribusi Rating
 
 Berdasarkan keterangan dataset, nilai rating -1 menandakan anime tersebut sudah ditonton oleh user namun belum mendapatkan rating. Karena data ini tidak dibutuhkan makan akan dihapus. Nilai rating 0 kosong karena tidak ada opsi untuk memberi rating 0 pada suatu anime. Dan rating tertinggi terpadat pada rating dengan nilai 8 dan nilai terkecil terdapat pada 1.
 
@@ -136,7 +140,9 @@ rating_df = rating_df.loc[rating_df['rating'] != -1]
 
 ### Plotting Distribusi Jumlah Rating dari User
 
-Gambar 2. Jumlah Rating yang diberikan User
+![distribusi_jumlah_rating](https://github.com/user-attachments/assets/660d3026-bf94-4cbd-9513-d1a24a6dd73b)
+
+Gambar 3. Jumlah Rating yang diberikan User
 
 Pada plot di atas terlihat bahwa setiap user telah memberi rating yang berbeda-beda. Bahkan ada user yang telah memberi 3500 rating. Dan juga dapat dilihat terdapat user yang baru memberi satu rating. User-user yang belum memberi banyak rating menimbulkan bias pada data. Untuk itu diperlukan sebuah nilai batas ambang untuk menyaring user-user dengan jumlah rating yang sedikit. Pada proyek ini nilai ambang batas yang diterapkan adalah 100. Dimana user yang belum memberi rating lebih dari 100 akan dihapus dari data. Berikut kode yang digunakan:
 
@@ -258,7 +264,9 @@ Berikut rekomendasi top-N dari user dengan id 666 :
 Metrics yang digunakan untuk mengukur performa model collaborative filtering adalah Mean Absolute Error (MAE). Mean Absolute Error (MAE) mengukur rata-rata absolut dari selisih antara nilai yang diprediksi oleh model dan nilai aktual. Ini memberikan gambaran langsung tentang seberapa jauh prediksi model dari nilai yang sebenarnya.
 
 Rumus MAE :
-$$ MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i| $$
+
+![Screenshot 2024-12-20 234934](https://github.com/user-attachments/assets/1e714702-5c1e-4ef6-805c-f0e06d7ab962)
+
 
 Di mana:
 * 𝑛 adalah jumlah total data.
@@ -274,7 +282,9 @@ Kekurangan MAE:
 1. Tidak Menunjukkan Variabilitas: MAE tidak menunjukkan variabilitas dari kesalahan prediksi karena mengabaikan tanda kesalahan.
 2. Tidak Berhubungan dengan Variansi: MAE tidak mempertimbangkan kuadrat dari kesalahan, sehingga tidak memberikan gambaran tentang seberapa jauh kesalahan prediksi menyebar.
 
-Gambar #. Plot MAE
+![MAE](https://github.com/user-attachments/assets/055dfd68-7f91-4c01-95d6-5de48b88c74f)
+
+Gambar 4. Plot MAE
 
 Berdasarkan diagram di atas dapat dilihat kurva biru (train) menunjukkan penurunan RMSE yang tajam pada awal epoch dan kemudian stabil setelah sekitar 10 epoch. Kurva oranye (test) juga menunjukkan penurunan RMSE yang tajam pada awal epoch, tetapi mulai stabil dan sedikit meningkat setelah sekitar 10 epoch.
 
