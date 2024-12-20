@@ -49,21 +49,233 @@ Informasi lebih lanjut dapat dilihat di [Anime Recommendations Database](https:/
    * anime_id: Identifikasi unik untuk setiap anime (berhubungan dengan anime_id di file anime.csv).
    * rating: Rating yang diberikan oleh pengguna untuk anime tertentu (bernilai dari -1 hingga 10 dimana -1 berarti pengguna telah menonton anime tetapi tidak memberikan rating).
 
-#### Dataset Anime
+## Eksplorasi Data Analysis (EDA) pada Data Anime
 
-#### Dataset Rating
+### Ringkasan Deskripsi Statistik
+| Item      | Rating       |
+|-----------|--------------|
+| count     | 12064.000000 |
+| mean      | 6.473902     |
+| std       | 1.026746     |
+| min       | 1.670000     |
+| 25%       | 5.880000     |
+| 50%       | 6.570000     |
+| 75%       | 7.180000     |
+| max       | 10.000000    |
+
+Tabel #. Deskripsi Statistik Rating pada Anime
+
+Berdasarkan tabel di atas dapat diketahui bahwa rating terendah yang diberi oleh user adalah 1.67 dan rating tertinggi 10. Rata-rata rating adalah 6.47.
+
+### Missing Value
+Missing value pada data anime didapat dengan menggunakan fungsi .isnull() dari pandas.
+```
+anime_df.isnull().sum()
+```
+Fungsi tersebut menghasilkan output sebagai berikut:
+| Fitur     | count |
+|-----------|-------|
+| anime_id  |   0   |
+| name      |   0   |
+| genre     |  62   |
+| type      |  25   |
+| episodes  |   0   |
+| rating    | 230   |
+| members   |   0   |
+
+Tabel # Missing Value pada Data Anime
+
+Jumlah missing value pada data anime sangat sedikit bila dibandingkan dengan jumlah total data yang ada. Metode yang digunakan untuk mengatasi missing value pada tabel anime adalah dengan menghapus baris yang yang memiliki missing value.
+
+###  Plotting Distribusi Jumlah Rating dari Setiap Anime
+
+Gambar 2. Distribusi Jumlah Rating pada Anime
+
+Bayangkan sebuah anime baru mendapat rating sebanyak satu, tentu penilaian terhadap anime itu akan sangat dipengaruhi oleh satu rating tersebut. Jika rating yang diberikan tinggi tentu anime tersebut akan memiliki citra yang bagus dan sebaliknya. Anime dengan kondisi seperti ini dapat menjadi bias saat membangun model AI. Oleh karena itu diterapkan nilai ambang yang akan menyaring anime dengan jumlah rating yang rendah. Nilai ambang yang digunakan pada proyek ini adalah 50 yang akan menghapus anime dengan jumlah rating lebih kecil dari 50.
+
+## Eksplorasi Data Analysis (EDA) pada Data Rating
+
+### Ringkasan Deskripsi Statistik
+| Item      | Rating        |
+|-----------|---------------|
+| count     | 7.813737e+06  |
+| mean      | 6.144030e+00  |
+| std       | 3.727800e+00  |
+| min       | -1.000000e+00 |
+| 25%       | 6.000000e+00  |
+| 50%       | 7.000000e+00  |
+| 75%       | 9.000000e+00  |
+| max       | 1.000000e+01  |
+
+Tabel #. Deskripsi Statistik rating pada Rating
+
+Berdasarkan tabel di atas dapat diketahui bahwa rating terendah yang diberi oleh user adalah -1 dimana rating -1 berarti bahwa user tidak memberi rating pada anime dan rating tertinggi 10. Rata-rata rating adalah 6.14.
+
+### Missing Value
+Fungsi yang sama untuk melihat missing value pada data anime juga akan diguanakn pada data rating dan didapat bahwa data rating tidak memiliki missing value pada setiap fiturnya. Output dari fungsu isnull() dapat dilihat pada tabel berikut:
+
+| Fitur     | count |
+|-----------|-------|
+| user_id   | 0     |
+| anime_id  | 0     |
+| rating    | 0     |
+
+Tabel #. Missing Value pada Data Rating
+
+
+### Plotting Distribusi Rating
+
+Gambar 1. Distribusi Rating
+
+Berdasarkan keterangan dataset, nilai rating -1 menandakan anime tersebut sudah ditonton oleh user namun belum mendapatkan rating. Karena data ini tidak dibutuhkan makan akan dihapus. Nilai rating 0 kosong karena tidak ada opsi untuk memberi rating 0 pada suatu anime. Dan rating tertinggi terpadat pada rating dengan nilai 8 dan nilai terkecil terdapat pada 1.
+
+Berikut adalah kode yang digunakan untuk menghapus rating dengan nilai -1:
+```
+rating_df = rating_df.loc[rating_df['rating'] != -1]
+```
+
+### Plotting Distribusi Jumlah Rating dari User
+
+Gambar 2. Jumlah Rating yang diberikan User
+
+Pada plot di atas terlihat bahwa setiap user telah memberi rating yang berbeda-beda. Bahkan ada user yang telah memberi 3500 rating. Dan juga dapat dilihat terdapat user yang baru memberi satu rating. User-user yang belum memberi banyak rating menimbulkan bias pada data. Untuk itu diperlukan sebuah nilai batas ambang untuk menyaring user-user dengan jumlah rating yang sedikit. Pada proyek ini nilai ambang batas yang diterapkan adalah 100. Dimana user yang belum memberi rating lebih dari 100 akan dihapus dari data. Berikut kode yang digunakan:
+
+```
+user_count_rating = rating_df['user_id'].value_counts()
+valid_users = user_count_rating[user_count_rating >= 100]
+data_rating = data_rating[data_rating['user_id'].isin(valid_users)]
+```
+
+Pertama dihitung berapa banyak rating yang telah diberi oleh setiap user. Kemudian dibuat sebuah variabel yang menampung user yang telah memberi rating lebih dari 100 kemudian menggunakan fungsi isin() menghapus user yang tidak memenuhi ambang batas.
 
 # Data Preparation
 
-## Eksplorasi Data Analysis (EDA)
+## Fitur dan Label Encoding
+Fitur encoding adalah proses penting dalam machine learning terutama ketika bekerja dengan data kategorikal. Algoritma machine learning membutuhkan data dalam format numerik agar dapat bekerja dengan baik. 
 
-### Ringkasan Deskripsi Statistik
+### Fitur user_id
+Setelah melalui berbagai tahap preprocessing ada user_id yang terhapus dalam prosesnya. Sehingga meski user_id sudah disimpan dalam bentuk numerik dibutuhkan encoding agar user_id memilki nilai yang terurut. Kolom user_id akan di-loop untuk kemudian didapat indexnya. Index ini lah yang akan menjadi nilai baru dari user_id.
 
-### Missing Value
+### Fitur anime_id
+Setelah melalui berbagai tahap preprocessing ada anime_id yang terhapus dalam prosesnya. Sehingga meski anime_id sudah disimpan dalam bentuk numerik dibutuhkan encoding agar anime_id memilki nilai yang terurut. Kolom anime_id akan di-loop untuk kemudian didapat indexnya. Index ini lah yang akan menjadi nilai baru dari anime_id.
 
-### Unrated Anime
+### Fitur Genre
+Nilai pada fitur genre bukan disimpan dalam bentuk numerik sehingga fitur genre harus di-encode agar dapat diolah dengan baik oleh model machine learning. Langkah pertama yang dilakukan adalah mendapat nilai unik dari genre kemudian disimpan dalam sebuah array. Kemudian sama seperti fitur user_id dan anime_id, array akan di-looping untuk mendapatkan indexnya dan index ini lah yang menjadi nilai baru dari genre.
 
+## Seleksi Fitur
+Sebelum seleksi fitur dilakukan data akan diacak terlebih dahulu menggunakan syntax berikut:
+```
+data_rating.sample(frac=1, random_state=22)
+```
+
+Fitur user dan anime akan menjadi variabel input pada model collaborative filtering. Dan Rating akan menjadi variabel target.
+
+## Normalisasi
+Normalisasi dalam machine learning adalah proses mengubah skala fitur-fitur data sehingga berada dalam rentang tertentu, biasanya antara 0 dan 1, atau mengubah distribusi nilai menjadi memiliki rata-rata 0 dan standar deviasi 1. Tujuan utama normalisasi adalah memastikan setiap fitur berkontribusi setara dalam model pembelajaran mesin, terutama untuk algoritma yang sensitif terhadap skala data.
+
+Metode normalisasi yang digunakan adalah min-max normalisasi dimana metode mengubah nilai asli suatu fitur berdasarkan nilai minimum dan maksimum dari fitur tersebut.
+
+## Splitting Data
+Dataset akan dibagi menjadi data latih dan data uji. Data latih digunakan untuk melatih model, sedangkan data uji digunakan untuk menguji kinerja model pada data yang belum pernah dilihat sebelumnya. Dalam proyek ini, data latih akan memiliki ukuran 80% dari dataset dan untuk data latih sebesar 20% dari dataset. Sehingga jumlah data latih adalah 61316 dan jumlah data uji sebanyak 15329.
 
 # Modeling
 
+## 4.1. Content Based Filtering
+Metode TF-IDF digunakan untuk menemukan representasi fitur penting dari setiap genre anime. Fungsi tfidfvectorizer() dari scikit-learn akan digunakan untuk menemukan representasi tersebut.
+
+Kemudian metode cosine similarity akan digunakan untuk mengukur kemiripan antar anime berdasarkan representasi genre dari TF-IDF. Cosine similarity adalah metrik yang digunakan untuk mengukur seberapa mirip dua vektor dalam ruang dimensi tinggi, berdasarkan sudut kosinus antara mereka. Cosine similarity tidak memperhitungkan magnitudo (panjang) vektor, tetapi lebih fokus pada arah vektor.
+
+Rumus Cosine Similarity
+Rumus untuk menghitung cosine similarity antara dua vektor A dan B adalah:
+
+cosine similarity = 𝐴⋅𝐵 / ∣∣𝐴∣∣ × ∣∣𝐵∣∣
+
+Di mana:
+* 𝐴⋅𝐵 adalah dot product dari vektor A dan B.
+* ∣∣𝐴∣∣ adalah magnitudo (panjang) dari vektor A.
+* ∣∣𝐵∣∣ adalah magnitudo (panjang) dari vektor B.
+
+Berikut rekomendasi top-N dari anime "Death Note" :
+| name	                                   | genre                                            |              
+|-------------------------------------------|--------------------------------------------------|
+|	Death Note Rewrite	                    | Mystery Police Psychological Supernatural Thri...
+|	Mousou Dairinin	                       | Drama Mystery Police Psychological Supernatura...
+|	Higurashi no Naku Koro ni Kai	           | Mystery Psychological Supernatural Thriller
+|	Higurashi no Naku Koro ni Rei	           | Comedy Mystery Psychological Supernatural Thri...
+|	Mirai Nikki (TV)                         | Action Mystery Psychological Shounen Supernatu...
+|	Mirai Nikki (TV): Ura Mirai Nikki	     | Action Comedy Mystery Psychological Shounen Su...
+|	Higurashi no Naku Koro ni	              | Horror Mystery Psychological Supernatural Thri...
+|	Monster	                                | Drama Horror Mystery Police Psychological Sein...
+|	AD Police	                             | Adventure Dementia Mecha Mystery Police Psycho...
+|	Higurashi no Naku Koro ni Kaku: Outbreak | Horror Mystery Psychological Thriller 
+
+
+## 4.2. Collaborative Filtering
+Model menghitung skor kecocokan antara pengguna dan anime dengan teknik embedding. Berikut langkah-langkah yang dilakukan:
+1.  dilakukan proses embedding terhadap data user dan resto dengan parameter embeddings_initializer adalah 'he_normal' dan embeddings_regularizer yang digunakan adalah l2 dengan nilai 1e-6 dan ukuran embedding sebesar 50.
+2.  lakukan operasi perkalian dot product antara embedding user dan resto.
+3.  tambahkan bias untuk setiap user dan resto. 
+4.  Skor kecocokan ditetapkan dalam skala [0,1] dengan fungsi aktivasi sigmoid.
+
+Setelah model didefinisikan dengan mengikuti langkat di atas kemudia model di-compile dengan parameter sebagai berikut:
+1. Loss function adalah fungsi yang digunakan untuk mengukur seberapa baik model Anda dalam membuat prediksi. Loss function menghitung perbedaan antara prediksi model dan nilai sebenarnya dari data pelatihan. Tujuan pelatihan model adalah untuk meminimalkan nilai loss ini. Fungsi loss yang digunakan pada proyek ini adalah Binary Cross-Entropy.
+2. Optimizer adalah algoritma yang digunakan untuk memperbarui bobot model selama proses pelatihan untuk meminimalkan loss. Optimizer menggunakan gradient descent atau variasi lainnya untuk melakukan pembaruan ini. Optimizer yang digunakan adalah Adam.
+3. Metrics adalah fungsi yang digunakan untuk mengevaluasi kinerja model. Metrik ini tidak mempengaruhi proses pelatihan tetapi memberikan informasi tentang seberapa baik model Anda berjalan pada data pelatihan dan validasi. Metrics yang digunakan adalah Mean Absolute Error (MAE).
+
+Terakhir proses training dilakukan dengan parameter sebagai berikut:
+1. x: Parameter ini menunjukkan data fitur yang digunakan untuk pelatihan model. Ini adalah input yang digunakan oleh model untuk belajar.
+2. y: Parameter ini menunjukkan data target yang digunakan untuk pelatihan model. Ini adalah output yang diharapkan dari model, yang akan digunakan untuk membandingkan dan menghitung error selama pelatihan.
+3. batch_size: 8 Parameter ini menentukan jumlah sampel yang akan diproses sebelum model diperbarui. Dalam contoh ini, setiap 8 sampel, model akan memperbarui bobotnya berdasarkan perhitungan error.
+4. epochs: 100 Parameter ini menunjukkan jumlah iterasi penuh melalui dataset pelatihan. Dalam contoh ini, model akan melewati seluruh dataset pelatihan sebanyak 100 kali.
+5. validation_data: (x_valid, y_valid) Parameter ini menunjukkan data validasi yang digunakan untuk mengevaluasi model selama pelatihan. Data ini tidak digunakan untuk pelatihan tetapi untuk memantau performa model dan mendeteksi overfitting.
+6. callbacks: EarlyStopping(monitor='val_root_mean_squared_error', mode='min', patience=5, restore_best_weights=True) Parameter ini menggunakan callback EarlyStopping untuk menghentikan pelatihan lebih awal jika metrik yang dipantau (val_root_mean_squared_error) tidak membaik setelah sejumlah epoch tertentu (patience=5). mode='min' menunjukkan bahwa metrik yang dipantau harus diminimalkan. restore_best_weights=True menunjukkan bahwa bobot terbaik akan dipulihkan setelah pelatihan dihentikan.
+
+Berikut anime yang pernah di tonton dan diberi rating oleh user dengan id 666:
+
+| Judul | Genre |
+|-------|-------|
+| No Game No Life     | Adventure, Comedy, Ecchi, Fantasy, Game, Supernatural |
+| High School DxD New | Action, Comedy, Demons, Ecchi, Harem, Romance, School |
+| Naruto              | Action, Comedy, Martial Arts, Shounen, Super Power |
+| High School DxD     | Comedy, Demons, Ecchi, Harem, Romance, School |
+| Black Bullet        | Action, Mystery, Sci-Fi, Seinen |
+
+Berikut rekomendasi top-N dari user dengan id 666 :
+| Judul | Genre |
+|-------|-------|
+| Mushishi | Adventure, Fantasy, Historical, Mystery, Seinen, Slice of Life, Supernatural
+| Kuroko no Basket 2nd Season | Comedy, School, Shounen, Sports
+| Akatsuki no Yona | Action, Adventure, Comedy, Fantasy, Romance, Shoujo
+| Nisekoi | Comedy, Harem, Romance, School, Shounen
+| Isshuukan Friends. | Comedy, School, Shounen, Slice of Life
+| Amagami SS | Comedy, Romance, School, Slice of Life
+| Boku wa Tomodachi ga Sukunai | Comedy, Ecchi, Harem, Romance, School, Seinen, Slice of Life
+| Maoyuu Maou Yuusha | Adventure, Demons, Fantasy, Historical, Romance
+| Naruto Movie 1: Dai Katsugeki!!| Adventure, Comedy, Drama, Historical, Shounen, Supernatural
+| Hidan no Aria | Action, Comedy, Romance, School
+
 # Evaluation
+Metrics yang digunakan untuk mengukur performa model collaborative filtering adalah Mean Absolute Error (MAE). Mean Absolute Error (MAE) mengukur rata-rata absolut dari selisih antara nilai yang diprediksi oleh model dan nilai aktual. Ini memberikan gambaran langsung tentang seberapa jauh prediksi model dari nilai yang sebenarnya.
+
+Rumus MAE :
+$$ MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i| $$
+
+Di mana:
+* 𝑛 adalah jumlah total data.
+* 𝑦𝑖 adalah nilai aktual.
+* 𝑦^𝑖 adalah nilai yang diprediksi oleh model.
+* ∣𝑦𝑖−𝑦^𝑖∣ adalah nilai absolut dari selisih antara nilai aktual dan nilai prediksi.
+
+Kelebihan MAE:
+1. Interpretasi yang Sederhana: MAE memberikan nilai rata-rata dari kesalahan prediksi dalam satuan yang sama dengan target.
+2. Tidak Sensitif terhadap Outlier: MAE tidak terlalu dipengaruhi oleh nilai ekstrim (outlier) dibandingkan dengan Mean Squared Error (MSE).
+
+Kekurangan MAE:
+1. Tidak Menunjukkan Variabilitas: MAE tidak menunjukkan variabilitas dari kesalahan prediksi karena mengabaikan tanda kesalahan.
+2. Tidak Berhubungan dengan Variansi: MAE tidak mempertimbangkan kuadrat dari kesalahan, sehingga tidak memberikan gambaran tentang seberapa jauh kesalahan prediksi menyebar.
+
+Gambar #. Plot MAE
+
+Berdasarkan diagram di atas dapat dilihat kurva biru (train) menunjukkan penurunan RMSE yang tajam pada awal epoch dan kemudian stabil setelah sekitar 10 epoch. Kurva oranye (test) juga menunjukkan penurunan RMSE yang tajam pada awal epoch, tetapi mulai stabil dan sedikit meningkat setelah sekitar 10 epoch.
+
+Grafik ini memberikan gambaran tentang bagaimana performa model meningkat selama pelatihan dan bagaimana model tersebut menggeneralisasi pada data pengujian. Penurunan RMSE pada data pelatihan dan pengujian menunjukkan bahwa model belajar dengan baik
