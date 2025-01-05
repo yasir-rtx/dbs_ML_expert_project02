@@ -183,6 +183,12 @@ Terakhir menerapkan fungsi encoding dengan syntax berikut :
 ### TF-IDF
 Dalam konteks sistem rekomendasi berbasis pengguna (user-based) dan item (item-based), TF-IDF tetap memainkan peran penting untuk mengekstrak fitur penting dari teks yang digunakan dalam rekomendasi. Matrix inilah yang akan digunakan untuk mendapat nilai kesamaannya menggunakan fungsi cosine similarity.
 
+Rumus TFIDF:
+
+$$
+TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D)
+$$
+
 Berikut adalah syntax yang digunakan untuk mendapatkan matrix relasi TFIDf:
 ```
 tfidf = TfidfVectorizer(token_pattern=r'\b\w+\b')
@@ -363,13 +369,6 @@ Top-10 rekomendasi anime :
   MSE mengukur rata-rata kuadrat dari kesalahan atau perbedaan antara nilai yang diprediksi oleh model dan nilai aktual. MSE memberikan bobot lebih tinggi pada kesalahan yang lebih besar karena kesalahan dikuadratkan.
   
   Rumus MSE adalah:
-  
-$$ TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D) $$
-
-```latex
-$$ TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D) $$
-```
-
 
   **_MSE_ = $\frac{1}{n} \Sigma_{i=1}^n({y}-\hat{y})^2$**
   Di mana:
