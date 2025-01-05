@@ -87,7 +87,7 @@ Pada dataset rating didapat informasi statistik rating terendah adalah -1 dan ra
 Tabel 2. Deskripsi Statistik Rating pada Rating
 
 ### Plotting Distribusi Rating
-[GAMBAR 1]
+![Distribusi_Rating](https://github.com/user-attachments/assets/2e3943c8-ab07-4861-b722-a6a4f8644f21)
 
 Gambar 1. Distribusi Rating
 
@@ -101,7 +101,8 @@ Berdasarkan diagram bar di atas didapat informasi sebagai berikut :
 Dari plot ini, terlihat bahwa sebagian besar rating terkonsentrasi pada nilai 1 dan 7 hingga 10, dengan puncak pada rating 8. Hal ini bisa menunjukkan kecenderungan pengguna untuk memberikan rating yang sangat rendah atau sangat tinggi. Dan dikarenakan rating -1 berarti anime tersebut belum diberi rating dan jumlahnya sangat banyak, maka rating -1 dianggap bias dan akan di hapus di tahap Data Preparation.
 
 ### Plotting Distribusi Jumlah Rating dari User
-[GAMBAR 2]
+![Rating_Count_per_User](https://github.com/user-attachments/assets/42912632-10b1-476b-ba79-665f2b60f8fb)
+
 Gambar 2. Distribusi Jumlah Rating dari User
 
 Berikut penjelasan terkait Scatter Plot di atas:
@@ -113,7 +114,8 @@ Dari plot ini, terlihat bahwa sebagian besar pengguna memberikan kurang dari 100
 Dengan kata lain, sebagian besar pengguna aktif memberikan rating dalam jumlah kecil, sementara ada sebagian kecil pengguna yang sangat aktif dengan memberikan rating dalam jumlah besar. User yang memberi rating di bawah 100 akan menimbulkan bias terhadap model jaringan saraf yang akan dibangun. Untuk itu data ini juga akan di hapus pada tahap Data Preparation.
 
 ### Plotting Distribusi Jumlah Rating tiap Anime
-[GAMBAR 3]
+![Rating_Count_per_Anime](https://github.com/user-attachments/assets/d5152bd3-a44d-48ba-8a6c-7543223a2004)
+
 Gambar 3. Distribusi Jumlah Rating tiap Anime
 
 Berikut penjelasan terkait Scatter Plot di atas:
@@ -359,8 +361,9 @@ Top-10 rekomendasi anime :
 * MSE
   MSE mengukur rata-rata kuadrat dari kesalahan atau perbedaan antara nilai yang diprediksi oleh model dan nilai aktual. MSE memberikan bobot lebih tinggi pada kesalahan yang lebih besar karena kesalahan dikuadratkan.
   
-  Rumus MSE adalah: 
-  $$ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 $$ 
+  Rumus MSE adalah:
+  
+  **_MSE_ = $\frac{1}{n} \Sigma_{i=1}^n({y}-\hat{y})^2$**
   Di mana:
   * 𝑛 adalah jumlah pengamatan.
   * 𝑦𝑖 adalah nilai aktual.
@@ -368,13 +371,12 @@ Top-10 rekomendasi anime :
 
 * RMSE
   RMSE adalah akar kuadrat dari MSE. RMSE memberikan interpretasi yang lebih langsung tentang kesalahan karena berada dalam skala yang sama dengan nilai asli. RMSE sering kali lebih mudah dipahami dan digunakan untuk membandingkan kinerja model.
-  Rumus RMSE adalah: 
-  $$ RMSE = \sqrt{MSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2} $$
+  Rumus RMSE adalah:
+  
+  **_RMSE_ = $\sqrt{MSE}$**
 
 ### Content Based Filtering
-Pada model dengan menggunakan Cosine Similarity menghasilkan nilai presisi 100% dari top 10 rekomendasi film.
-[GAMBAR]
-Gambar 4. Precision Model Content Based Filtering
+Pada model dengan menggunakan Cosine Similarity menghasilkan nilai presisi 99.05% dari top 10 rekomendasi film.
 
 ### Collaborative Filtering
 Pada model dengan pendekatan Jaringan Syarat Tiruan menghasilkan nilai kesalahan sebagai berikut :
@@ -383,9 +385,10 @@ Pada model dengan pendekatan Jaringan Syarat Tiruan menghasilkan nilai kesalahan
 * RMSE : 0.1491
 * Validation RMSE : 0.1499
 
-[GAMBAR]
+![Model_Evaluasi](https://github.com/user-attachments/assets/853fd41f-8dea-4de6-8888-ade954c0a542)
 
-Gambar 5. MSE dan RMSE Model Collaborative Filtering
+
+Gambar 4. MSE dan RMSE Model Collaborative Filtering
 
 ### Kesimpulan
 #### Problem Statement Answers
