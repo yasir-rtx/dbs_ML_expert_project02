@@ -15,27 +15,25 @@ Berikut beberapa alasan mengapa proyek ini untuk diselesaikan:
 
 Berdasarkan jurnal penelitian 2024 yang ditulis Nazhif Muafa Roziqiin dan M. Faisal dengan judul Sistem Rekomendasi Pemilihan Anime Menggunakan User-Based Collaborative Filtering[1] menjelaskan metode User-Based Collaborative Filtering berdasarkan preferensi pengguna dapat digunakan untuk membangun sistem rekomendasi. Penelitian lain oleh Altolyto Sitanggang dkk dengan judul Sistem Rekomendasi Anime Menggunakan Metode Singular Value Decomposition (SVD) dan Cosine Similarity[2] menjelaskan cosine similarity dapat digunakan untuk mengukur kemiripan antar anime juga dapat dijadikan dasar sistem rekomendasi.
 
-
-
 # Business Understanding
 
-### Proble Statements
-1. Bagaimana mengembangkan sistem rekomendasi yang akurat dan mampu membuat sistem rekomendasi yang personal berdasarkan preferensi pengguna serta mampu membuat rekomendasi berdasarkan kemiripan anter anime?
-2. Bagaimana memamfaatkan fitur-fitur yang terdapat pada dataset untuk membuat rekomendasi yang relevan bagi pengguna?
+### Problem Statements
+1. Bagaimana mengembangkan sistem rekomendasi yang akurat dan mampu membuat sistem rekomendasi yang personal berdasarkan preferensi pengguna serta mampu membuat rekomendasi berdasarkan kemiripan antara anime?
+2. Bagaimana memanfaatkan fitur-fitur yang terdapat pada data set untuk membuat rekomendasi yang relevan bagi pengguna?
 
 ### Goals
 1. Mengembangkan sistem rekomendasi anime yang akurat dan personal untuk setiap pengguna dan juga mampu memberikan rekomendasi berdasarkan kemiripan antar anime.
 2. Memanfaatkan data interaksi pengguna dan fitur-fitur anime untuk memberikan rekomendasi yang relevan.
 
 ### Solution Statements
-1. Mengembangkan sistem rekomendasi menggunakan metode content based filtering dengan memamfaatkan fitur genre untuk membuat sistem rekomendasi.
-2. Mengembangkan sistem rekomendasi menggunakan metode collaborative filtering dengan memamfaatkan korelasi antara anime dengan rating yang diberikan oleh user.
+1. Mengembangkan sistem rekomendasi menggunakan metode content based filtering dengan memanfaatkan fitur genre untuk membuat sistem rekomendasi.
+2. Mengembangkan sistem rekomendasi menggunakan metode collaborative filtering dengan memanfaatkan korelasi antara anime dengan rating yang diberikan oleh user.
 # Data Understanding
-Dataset yang digunakan dalam proyek ini adalah "Anime Recommendations Database" yang tersedia di Kaggle. Dataset ini berisi informasi tentang berbagai judul anime serta interaksi pengguna dengan anime tersebut. Dataset ini didapat dari website [myanimelist](https://myanimelist.net/).
+Data set yang digunakan dalam proyek ini adalah "Anime Recommendations Database" yang tersedia di Kaggle. Data set ini berisi informasi tentang berbagai judul anime serta interaksi pengguna dengan anime tersebut. Data set ini didapat dari website [myanimelist](https://myanimelist.net/).
 
 Informasi lebih lanjut dapat dilihat di [Anime Recommendations Database](https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database).
 
-### Struktur Dataset: Dataset ini terdiri dari dua file utama:
+### Struktur Data set: Data set ini terdiri dari dua file utama:
 1. anime.csv (dimensi data 12294 baris x 7 kolom): file ini berisi informasi mengenai judul-judul anime. Beberapa kolom penting dalam file ini meliputi:
    * anime_id: Identifikasi unik untuk setiap anime.
    * name: Nama atau judul anime.
@@ -55,7 +53,7 @@ Informasi lebih lanjut dapat dilihat di [Anime Recommendations Database](https:/
 ### Anime
 
 #### Ringkasan Deskripsi Rating
-Pada dataset anime didapat informasi statistik rating terendah adalah 1.67 dan rating tertinggi adalah 10. Dan rata-rata rating yang diberikan pada anime tersebut adalah 6.47.
+Pada data set anime didapat informasi statistik rating terendah adalah 1.67 dan rating tertinggi adalah 10. Dan rata-rata rating yang diberikan pada anime tersebut adalah 6.47.
 | item  |    Rating    |
 |-------|--------------|
 | count | 12064.000000 |
@@ -72,7 +70,7 @@ Tabel 1. Deskripsi Statistik Rating pada Anime
 ### Rating
 
 #### Ringkasan Deskripsi Rating
-Pada dataset rating didapat informasi statistik rating terendah adalah -1 dan rating tertinggi adalah 10. Dan rata-rata rating yang diberikan pada anime tersebut adalah 6.14.
+Pada data set rating didapat informasi statistik rating terendah adalah -1 dan rating tertinggi adalah 10. Dan rata-rata rating yang diberikan pada anime tersebut adalah 6.14.
 | item  |     Rating    |
 |-------|---------------|
 | count |  7.813737e+06 |
@@ -127,15 +125,13 @@ Dari plot ini, terlihat bahwa sebagian besar anime memiliki jumlah rating yang r
 
 Plot ini menarik karena menunjukkan distribusi jumlah rating di antara berbagai anime, yang dapat memberikan wawasan tentang popularitas dan tingkat partisipasi pengguna dalam memberikan rating pada anime tertentu. Anime dengan jumlah rating kurang 50 akan menjadi bias pada data dan akan dihapus pada tahap Data Preparation.
 
-
-
 # Data Preparation
 
 ## Content Based Filtering
-Pada model sistem rekomendasi menggunakan Content Based Filtering akan menggunakan dataset Anime. Dimana akan membuat cluster user yang memiliki preferensi serupa. Sebelum membuat model data perlu dipersiapkan. 
+Pada model sistem rekomendasi menggunakan Content Based Filtering akan menggunakan data set Anime. Dimana akan membuat kluster user yang memiliki preferensi serupa. Sebelum membuat model data perlu dipersiapkan. 
 
 ### Missing Value
-Untuk melihat missing value pada dataset anime, dapat menggunakan syntaxx berikut :
+Untuk melihat missing value pada data set anime, dapat menggunakan syntax berikut :
 
 ``` anime_df.isnull().sum() ```
 
@@ -150,14 +146,14 @@ Dengan output sebagai berikut :
 | rating   |           230 |
 | members  |             0 |
 
-Tabel 3. Missing Value pada Dataset Anime
+Tabel 3. Missing Value pada Data set Anime
 
 Dari output di atas dapat diketahui fitur genre memiliki 62 missing value, fitur type memiliki 25 value, dan fitur rating memiliki 230 missing value yang merupakan fitur dengan missing value terbanyak. Jika dibandingkan dengan jumlah data secara keseluruhan dapat dikatakan jumlah missing value sengat kecil sehingga solusinya, data dengan missing value akan dihapus. Berikut syntax yang digunakan :
 
 ``` anime_df.dropna() ```
 
 ### Feature Encoding
-Fitur encoding adalah tahap penting dimana mengubah nilai genre yang kategorikal menjadi numerikal. Langkah pertama yang dilakukan adalah mengambil nilai unik dari genre dengan syntax berikut :
+Fitur encoding adalah tahap penting dimana mengubah nilai genre yang categorical menjadi numerical. Langkah pertama yang dilakukan adalah mengambil nilai unik dari genre dengan syntax berikut :
 
 ``` list_genres = sort(anime_df['genre'].str.split(', ').explode('genre').unique()) ```
 
@@ -195,18 +191,18 @@ tfidf.get_feature_names_out()
 ```
 
 Berikut 5 sample dari matrix TFIDF:
-|                                    | Super Power | Game |  Horror  |	Seinen   |	Shoujo  |	Adventure |	  Space  | Josei | Shounen Ai | Historical |
+|                                    | Super Power | Game |  Horror  |  Seinen   |  Shoujo  |   Adventure |   Space  | Josei | Shounen Ai | Historical |
 |------------------------------------|-------------|------|----------|-----------|----------|-------------|----------|-------|------------|------------|
-| Ninja-tai Gatchaman ZIP!           |	   0.0	   | 0.0	 | 0.000000 |	0.000000 |    0.0   |      0.0    | 0.000000	|  0.0  |     0.0 	|    0.0     |
-| Penguin&#039;s Memory: Shiawase    |	   0.0	   | 0.0	 | 0.000000 | 0.621717	|    0.0	  |      0.0  	 | 0.000000	|  0.0  |     0.0 	|    0.0     |
-| Mobile Suit Gundam Unicorn RE:0096 |	   0.0	   | 0.0	 | 0.000000 | 0.000000	|    0.0   |      0.0    | 0.521114	|  0.0  |     0.0 	|    0.0     |
-| Kyoto Animation: Ajisai-hen        |	   0.0	   | 0.0	 | 0.000000 | 0.000000	|    0.0   |      0.0    | 0.000000	|  0.0  |     0.0 	|    0.0     |
-| Tokyo Ghoul: &quot;Pinto&quot;     |	   0.0	   | 0.0	 | 0.477662 | 0.000000	|    0.0   |      0.0    | 0.000000	|  0.0  |     0.0 	|    0.0     |
+| Ninja-tai Gatchaman ZIP!           |    0.0      | 0.0  | 0.000000 |  0.000000 |    0.0   |      0.0    | 0.000000 |  0.0  |     0.0    |    0.0     |
+| Penguin&#039;s Memory: Shiawase    |    0.0      | 0.0  | 0.000000 | 0.621717  |    0.0   |      0.0    | 0.000000 |  0.0  |     0.0    |    0.0     |
+| Mobile Suit Gundam Unicorn RE:0096 |    0.0      | 0.0  | 0.000000 | 0.000000  |    0.0   |      0.0    | 0.521114 |  0.0  |     0.0    |    0.0     |
+| Kyoto Animation: Ajisai-hen        |    0.0      | 0.0  | 0.000000 | 0.000000  |    0.0   |      0.0    | 0.000000 |  0.0  |     0.0    |    0.0     |
+| Tokyo Ghoul: &quot;Pinto&quot;     |    0.0      | 0.0  | 0.477662 | 0.000000  |    0.0   |      0.0    | 0.000000 |  0.0  |     0.0    |    0.0     |
 
 Tabel 4. Sample dari Matrix TFIDF
 
 ## Collaborative Filtering
-Pada model sistem rekomendasi menggunakan Collaborative Filtering akan menggunakan dataset Rating. Dimana akan dilatih sebuah model jaringan syaraf tiruan untuk memprediksi rating yang akan diberikan oleh user berdasarkan anime yang telah ditonton dan diberikan rating oleh user tersebut. Sebelum membuat model data perlu dipersiapkan. 
+Pada model sistem rekomendasi menggunakan Collaborative Filtering akan menggunakan data set Rating. Dimana akan dilatih sebuah model jaringan syaraf tiruan untuk memprediksi rating yang akan diberikan oleh user berdasarkan anime yang telah ditonton dan diberikan rating oleh user tersebut. Sebelum membuat model data perlu dipersiapkan. 
 
 ### Missing Value
 Dengan menggunakan syntax yang sama pada content based filtering untuk melihat missing value didapat output sebagai berikut :
@@ -217,9 +213,9 @@ Dengan menggunakan syntax yang sama pada content based filtering untuk melihat m
 | anime_id |   0 |
 | rating   |   0 |
 
-Tabel 5. Missing Value pada Dataset Rating
+Tabel 5. Missing Value pada Data set Rating
 
-Berdasarkan tabel di atas dapat diketahui dataset rating tidak menyimpan nilai missing value sama sekali.
+Berdasarkan tabel di atas dapat diketahui data set rating tidak menyimpan nilai missing value sama sekali.
 
 ### Unrated Anime
 Unrated anime di sini adalah anime dengan rating -1 yang berarti anime tersebut telah ditonton oleh user namun belum diberi rating. Berdasarkan plotting distribusi rating dapat dilihat bahwa jumlah anime dengan rating -1 adalah sekitar 1.400.000 data. Tentu ini akan menjadi bias yang sangat besar terhadap model yang akan dibangun. Untuk itu data dengan rating -1 akan dihapus menggunakan syntax berikut :
@@ -239,7 +235,7 @@ Bias data selanjutnya adalah user yang memberi rating kurang dari 100 dan anime 
 ### Feature Encoding
 Fitur yang akan di-encoding pada tahap ini adalah user_id dan anime_id. Langkah-langkah yang dilakukan adalah sebagai berikut :
 1. Membuat kamus yang menyimpan user_id dan anime_id serta nilai encoded
-2. Melakukan mapping kepada dataset rating dengan membuat dua kolom baru yaitu user_id_encoded dan anime_id_encoded.
+2. Melakukan mapping kepada data set rating dengan membuat dua kolom baru yaitu user_id_encoded dan anime_id_encoded.
 
 ### Convert Rating Values to Float
 Karena model jaringan saraf tiruan bekerja dengan nilai float nilai rating perlu diubah ke tipe data float untuk memastikan model dapat membuat prediksi dengan baik. Berikut syntax yang digunakan:
@@ -269,8 +265,13 @@ y = scaler.fit_transform(reshape(y, (-1, 1)))
 ```
 
 ### Data Splitting
-Data akan dibagi menjadi data latih dan data uji. Perbandingan yang digunakan adalah 80% data sebagai data latih dan sisa 20% sebagai data uji.
-
+Data akan dibagi menjadi data latih dan data uji. Perbandingan yang digunakan adalah 80% data sebagai data latih dan sisa 20% sebagai data uji. Berikut shape data latih dan uji:
+|  data   |  count  |
+|---------|---------|
+| x_train | 3698383 |
+| y_train | 3698383 |
+| x_test  |  924596 |
+| y_test  |  924596 |
 
 # Modeling
 
@@ -287,31 +288,31 @@ Keterangan:
   
 Berikut top 10 rekomendasi anime yang serupa dari anime "UFO Princess Valkyrie: Recap" dengan genre Comedy, Romance, Sci-Fi :
 
-
-|   | name	                                             | genre	          | similarity_score |
+|   | name                                               | genre            | similarity_score |
 |---|----------------------------------------------------|------------------|------------------|
-| 0 |	Hoshi Neko Fullhouse | Comedy, Romance, Sci-Fi	| 1.0 |
-| 1 |	Narue no Sekai | Comedy, Romance, Sci-Fi	| 1.0 |
-| 2 |	Misute♡naide Daisy	| Comedy, Romance, Sci-Fi	| 1.0 |
-| 3 |	UFO Princess Valkyrie: Special	| Comedy, Romance, Sci-Fi	| 1.0 |
-| 4 |	UFO Princess Valkyrie 2: Juunigatsu no Yasoukyoku	| Comedy, Romance, | Sci-Fi	| 1.0 |
-| 5 |	Blue Seed 1.5	| Comedy, Romance, Sci-Fi	| 1.0 |
-| 6 |	Onegai☆Teacher: Reminiscence Disc	| Comedy, Romance, Sci-Fi	| 1.0 |
-| 7 |	UFO Princess Valkyrie 4: Toki to Yume to Ginga...	| Comedy, Romance, | Sci-Fi	| 1.0 |
-| 8 |	DNA²	| Comedy, Romance, Sci-Fi	| 1.0 |
-| 9 |	Soul Link Picture | Drama	Romance, Sci-Fi	| 0.904857 |
+| 0 | Hoshi Neko Fullhouse | Comedy, Romance, Sci-Fi  | 1.0 |
+| 1 | Narue no Sekai | Comedy, Romance, Sci-Fi  | 1.0 |
+| 2 | Misute♡naide Daisy   | Comedy, Romance, Sci-Fi  | 1.0 |
+| 3 | UFO Princess Valkyrie: Special   | Comedy, Romance, Sci-Fi  | 1.0 |
+| 4 | UFO Princess Valkyrie 2: Juunigatsu no Yasoukyoku  | Comedy, Romance, Sci-Fi   | 1.0 |
+| 5 | Blue Seed 1.5  | Comedy, Romance, Sci-Fi  | 1.0 |
+| 6 | Onegai☆Teacher: Reminiscence Disc   | Comedy, Romance, Sci-Fi  | 1.0 |
+| 7 | UFO Princess Valkyrie 4: Toki to Yume to Ginga...  | Comedy, Romance, Sci-Fi   | 1.0 |
+| 8 | DNA²  | Comedy, Romance, Sci-Fi  | 1.0 |
+| 9 | Soul Link Picture | Drama  Romance, Sci-Fi   | 0.904857 |
 
 ### Collaborative Filtering
 Model yang digunakan adalah jaringan saraf tiruan sederhana. Model ini sangat cocok untuk memodelkan hubungan antara fitur user dan anime sebagai input dengan rating sebagai output. Model jaringan saraf tiruan akan mempelajari hubungan antara user dengan anime yang telah ditonton dan diberi rating untuk membuat prediksi rating yang akan diberikan kepada anime baru. Kemudian anime-anime baru ini akan disimpan dan diurutkan berdasarkan rating prediksinya untuk dijadikan top-n rekomendasi kepada user.
 Berikut adalah struktur model yang digunakan :
-1. Embedding Layer (proses embedding terhadap user)
-2. Bias Layer (nilai bias user)
-3. Embedding Layer (proses embedding terhadap anime)
-4. Bias layer (nilai bias anime)
-5. dot matrix (operasi ini terhadap anime dan user yang telah di-embedding kemudian ditambah dengan bias)
-6. activation layer (fungsi aktivasi sigmoid untuk mendapatkan prediksi rating)
+1. Embedding Layer: melakukan embedding terhadap nilai fitur user dengan parameter embeddings_initializer = 'he_normal' dan embeddings_regularizer = 1e-6
+2. Bias Layer: men-generate bias untuk user yang kemudian ditambahkan setelah operasi dot matrix
+3. Embedding Layer: melakukan embedding terhadap nilai fitur user dengan parameter embeddings_initializer = 'he_normal' dan embeddings_regularizer = 1e-6
+4. Bias layer: men-generate bias untuk user yang kemudian ditambahkan setelah operasi dot matrix
+5. dot matrix: operasi dot matrix terhadap anime dan user yang telah di-embedding)
+6. Menjumlahkan hasil operasi dot matrix dengan bias user dan bias anime dan menyimpannya dalam variabel x
+7. activation layer: fungsi aktivasi sigmoid diterapkan kepada x untuk mengubah rentang nilai menjadi 0 hingga 1
 
-Callback juga akan diimplentasikan pada proses pelatihan dimana metode callback yang digunakan adalah EarlyStopping dengan parameter sebagai berikut :
+Callback juga akan diimplementasikan pada proses pelatihan dimana metode callback yang digunakan adalah EarlyStopping dengan parameter sebagai berikut :
 1. monitor = 'val_root_mean_squared_error'
 2. mode = 'min'
 3. patience = 5
@@ -322,30 +323,30 @@ Selanjutnya model akan di-compile dengan parameter sebagai berikut:
 2. optimizer = optimizers.Adam(learning_rate=0.0001),
 3. metrics = [metrics.RootMeanSquaredError]
 
-Terakhir model akan ditraining sebanyak 100 kali dengan batch_size=128 untuk mengurangi beban komputasi.
+Terakhir model akan dilatih sebanyak 100 kali dengan batch_size=128 untuk mengurangi beban komputasi.
 
 Berikut top 10 rekomendasi anime dengan anime yang telah ditonton sebagai berikut :
 | | Judul | Genre |
 |-|-------|-------|
-| 0 |	Haikyuu!!	| Comedy, Drama, School, Shounen, Sports |
-| 1 |	No Game No Life	| Adventure, Comedy, Ecchi, Fantasy, Game, Super... |
-| 2 |	Digimon Adventure	| Action, Adventure, Comedy, Fantasy, Kids |
-| 3 |	Naruto	Action, | Comedy, Martial Arts, Shounen, Super P... |
-| 4 |	High School DxD	|Comedy, Demons, Ecchi, Harem, Romance, School |
+| 0 | Haikyuu!!   | Comedy, Drama, School, Shounen, Sports |
+| 1 | No Game No Life   | Adventure, Comedy, Ecchi, Fantasy, Game, Super... |
+| 2 | Digimon Adventure | Action, Adventure, Comedy, Fantasy, Kids |
+| 3 | Naruto   Action, | Comedy, Martial Arts, Shounen, Super P... |
+| 4 | High School DxD   |Comedy, Demons, Ecchi, Harem, Romance, School |
 
 Top-10 rekomendasi anime :
-| | Judul	| Genre |
+| | Judul   | Genre |
 |-|-------|-------|
-| 0 |	Noblesse: Awakening	| Action, School, Supernatural, Vampire |
-| 1 |	Nodame Cantabile OVA 2	| Comedy, Josei, Romance |
-| 2 |	Acchi Kocchi (TV): Place=Princess	| Comedy, Romance, School, Seinen, Slice of Life |
-| 3 |	One Piece: Romance Dawn	| Action, Comedy, Fantasy, Shounen, Super Power |
-| 4 |	Uchuu Show e Youkoso	| Adventure, Fantasy, Space |
-| 5 |	Soukyuu no Fafner: Dead Aggressor - Heaven and...	| Action, Drama, Mecha, Military, Sci-Fi |
-| 6 |	Mangaka-san to Assistant-san to The Animation ...	| Comedy, Ecchi, Harem, Seinen, Slice of Life |
-| 7 |	Buddy Complex: Kanketsu-hen - Ano Sora ni Kaer...	| Action, Mecha, Sci-Fi
-| 8 |	Bananya	| Comedy, Kids, Slice of Life |
-| 9 |	Fumiko no Kokuhaku	|Comedy |
+| 0 | Noblesse: Awakening  | Action, School, Supernatural, Vampire |
+| 1 | Nodame Cantabile OVA 2  | Comedy, Josei, Romance |
+| 2 | Acchi Kocchi (TV): Place=Princess   | Comedy, Romance, School, Seinen, Slice of Life |
+| 3 | One Piece: Romance Dawn | Action, Comedy, Fantasy, Shounen, Super Power |
+| 4 | Uchuu Show e Youkoso | Adventure, Fantasy, Space |
+| 5 | Soukyuu no Fafner: Dead Aggressor - Heaven and...  | Action, Drama, Mecha, Military, Sci-Fi |
+| 6 | Mangaka-san to Assistant-san to The Animation ...  | Comedy, Ecchi, Harem, Seinen, Slice of Life |
+| 7 | Buddy Complex: Kanketsu-hen - Ano Sora ni Kaer...  | Action, Mecha, Sci-Fi
+| 8 | Bananya  | Comedy, Kids, Slice of Life |
+| 9 | Fumiko no Kokuhaku   |Comedy |
 
 # Evaluation
 
@@ -363,6 +364,13 @@ Top-10 rekomendasi anime :
   
   Rumus MSE adalah:
   
+$$ TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D) $$
+
+```latex
+$$ TF\text{-}IDF(t,d,D) = TF(t,d) \times IDF(t,D) $$
+```
+
+
   **_MSE_ = $\frac{1}{n} \Sigma_{i=1}^n({y}-\hat{y})^2$**
   Di mana:
   * 𝑛 adalah jumlah pengamatan.
@@ -387,16 +395,15 @@ Pada model dengan pendekatan Jaringan Syarat Tiruan menghasilkan nilai kesalahan
 
 ![Model_Evaluasi](https://github.com/user-attachments/assets/853fd41f-8dea-4de6-8888-ade954c0a542)
 
-
 Gambar 4. MSE dan RMSE Model Collaborative Filtering
 
 ### Kesimpulan
 #### Problem Statement Answers
-1. Mengembangkan sistem rekomendasi menggunakan model content based filtering dan collaborative filtering dengan melakukan tahapan EDA kepada dataset untuk menemukan fitur yang cocok sebagai dasar dalam membuat sistem rekomendasi.
+1. Mengembangkan sistem rekomendasi menggunakan model content based filtering dan collaborative filtering dengan melakukan tahapan EDA kepada data set untuk menemukan fitur yang cocok sebagai dasar dalam membuat sistem rekomendasi.
 2. Berdasarkan EDA yang dilakukan, untuk sistem dengan content based filtering dapat menggunakan TFIDF terhadap fitur genre untuk kemudian dihitung nilai kesamaannya dengan cosine similairty. Sedangkan untuk collaborative filtering menggunakan model JST dengan fitur user dan anime sebagai input kemudian model akan memprediksi rating sebagai output.
 
 #### Goal Achievement
-1. Proyek ini meenghasilkan rekomendasi yang relevan dengan user berdasarkan kemiripan antara genre dan berdasarkan anime yang telah ditonton.
+1. Proyek ini menghasilkan rekomendasi yang relevan dengan user berdasarkan kemiripan antara genre dan berdasarkan anime yang telah ditonton.
 2. Berhasil menemukan korelasi antara user dan anime yang telah ditonton dengan rating untuk membuat rekomendasi baru untuk user tersebut.
 
 #### Solution 
@@ -404,6 +411,6 @@ Gambar 4. MSE dan RMSE Model Collaborative Filtering
 2. Collaborative Filtering dengan model JST (Jaringan Syaraf Tiruan) dengan memanfaatkan jaringan saraf tiruan untuk memprediksi rating film yang belum ditonton.
 
 # References
-[1]	A. Sitanggang et al., “Sistem Rekomendasi Anime Menggunakan Metode Singular Value Decomposition (SVD) dan Cosine Similarity,” 2023, [Online]. Available: http://jurnal.utu.ac.id/JTI
+[1]   A. Sitanggang et al., “Sistem Rekomendasi Anime Menggunakan Metode Singular Value Decomposition (SVD) dan Cosine Similarity,” 2023, [Online]. Available: http://jurnal.utu.ac.id/JTI
 
-[2]	N. M. Roziqiin and M. Faisal, “SISTEM REKOMENDASI PEMILIHAN ANIME MENGGUNAKAN USER-BASED COLLABORATIVE FILTERING,” JIPI (Jurnal Ilmiah Penelitian dan Pembelajaran Informatika), vol. 9, no. 1, pp. 299–306, Feb. 2024, doi: 10.29100/jipi.v9i1.4222.
+[2]   N. M. Roziqiin and M. Faisal, “SISTEM REKOMENDASI PEMILIHAN ANIME MENGGUNAKAN USER-BASED COLLABORATIVE FILTERING,” JIPI (Jurnal Ilmiah Penelitian dan Pembelajaran Informatika), vol. 9, no. 1, pp. 299–306, Feb. 2024, doi: 10.29100/jipi.v9i1.4222.
